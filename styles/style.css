@@ -1,0 +1,58 @@
+.game-field {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.cards-row {
+    display: flex;
+}
+
+body {
+    background-color: palevioletred;
+}
+
+.card {
+    width: 80px;
+    height: 80px;
+    margin: 10px;
+    background-position-x: -12px;
+    background-position-y: -20px;
+    background: #75cca9;
+}
+
+.card.opened {
+    background: url(../assets/Pokemons.png);
+}
+
+/* .card:nth-child(2) {
+    background-position-x: -146px;
+}
+
+.card:nth-child(3) {
+    background-position-x: -280px;
+}
+
+.card:nth-child(4) {
+    background-position-x: -413px;
+}
+
+.card:nth-child(5) {
+    background-position-x: -544px;
+}
+
+.cards-row:nth-child(2) .card {
+    background-position-y: -154px;
+}
+
+.cards-row:nth-child(3) .card {
+    background-position-y: -284px;
+}
+
+.cards-row:nth-child(4) .card {
+    background-position-y: -409px;
+}
+
+.cards-row:nth-child(5) .card {
+    background-position-y: -543px;
+} */
