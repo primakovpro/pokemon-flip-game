@@ -19,10 +19,13 @@ body {
     background-position-x: -12px;
     background-position-y: -20px;
     background: #75cca9;
+    transition: all .4s;
+    transform: rotateY(180deg);
 }
 
 .card.opened {
     background: url(../assets/Pokemons.png);
+    transform: rotateY(0);
 }
 
 /* .card:nth-child(2) {

@@ -1,11 +1,3 @@
-const gameProps = {
-    points: 0,
-    fieldWidth: 5,
-    fieldHeight: 6
-};
-
-const gameField = document.getElementById('game-field');
-
 const cardsBgs = [
     { x: 12, y: 20, id: '12x20' },
     { x: 146, y: 20, id: '146x20' },
@@ -22,70 +14,107 @@ const cardsBgs = [
     { x: 12, y: 543, id: '12x543' },
 ];
 
-gameField.innerHTML = '';
+class Game {
+    constructor(gameProps) {
+        this.settings = gameProps;
+        this.gameField = document.getElementById(gameProps.fieldId);
 
-const usedBgs = [];
+        this.cards = [];
+        this.firstElement = null;
+        this.isDisabled = false;
+        this.clearField();
+    }
 
-const pokemonsCount = gameProps.fieldHeight * gameProps.fieldWidth;
+    init() {
+        const usedBgs = [];
+        const pokemonsCount = this.settings.fieldHeight * this.settings.fieldWidth;
+    
+        for (let i = 0; i < pokemonsCount; i++) {
+            let selectedBg;
 
-let iterator = 0;
+            if ((pokemonsCount/2) >= i) {
+                const cardNumber = Math.floor(Math.random() * this.settings.cardsBgs.length);
+                selectedBg = this.settings.cardsBgs[cardNumber];
+                usedBgs.push(selectedBg);
+            } else {
+                selectedBg = usedBgs.pop();
+            }
 
-for (let i = 0; i < gameProps.fieldWidth; i++) {
-    const row = document.createElement('div');
-    row.classList.add('cards-row');
-
-    for (let j = 0; j < gameProps.fieldHeight; j++) {
-        iterator++;
-        const ceil = document.createElement('div');
-        ceil.classList.add('card');
-
-        if ((pokemonsCount/2) >= iterator) {
-            const cardNumber = Math.floor(Math.random() * cardsBgs.length);
-            const selectedBg = cardsBgs[cardNumber];
-            usedBgs.push(selectedBg);
-
-            ceil.style.backgroundPositionX = '-' + selectedBg.x + 'px';
-            ceil.style.backgroundPositionY = '-' + selectedBg.y + 'px';
-
-            ceil.dataset.elementId = selectedBg.id;
-
-            row.appendChild(ceil);
-        } else {
-            const selectedBg = usedBgs.pop();
-
-            ceil.style.backgroundPositionX = '-' + selectedBg.x + 'px';
-            ceil.style.backgroundPositionY = '-' + selectedBg.y + 'px';
-
-            ceil.dataset.elementId = selectedBg.id;
-
-            row.appendChild(ceil);
+            this.cards.push(selectedBg);
         }
 
-        ceil.onclick = ceilClickHandler
+        this.cards = this.cards.sort(() => Math.random() - 0.5);
     }
 
-    gameField.appendChild(row);
-}
+    render() {
+        this.clearField();
 
-let firstElement;
+        let iterator = 0;
+        for (let i = 0; i < this.settings.fieldWidth; i++) {
+            const row = document.createElement('div');
+            row.classList.add('cards-row');
 
-function ceilClickHandler(event) {
-    const el = event.target;
-    const elementId = el.dataset.elementId;
-    el.classList.add('opened');
+            for (let j = 0; j < this.settings.fieldHeight; j++) {
 
-    if (!firstElement) {
-        firstElement = {
-            el: event.target,
-            id: elementId
-        };
-    } else if(elementId === firstElement.id) {
-        firstElement = null;
-    } else {
-        setTimeout(function() {
-            firstElement.el.classList.remove('opened');
-            el.classList.remove('opened');
-            firstElement = null;
-        }, 500);
+                const currentCeil = this.cards[iterator];
+
+                const ceil = document.createElement('div');
+                ceil.classList.add('card');
+                
+                ceil.style.backgroundPositionX = '-' + currentCeil.x + 'px';
+                ceil.style.backgroundPositionY = '-' + currentCeil.y + 'px';
+
+                ceil.dataset.elementId = currentCeil.id;
+
+                row.appendChild(ceil);
+
+                ceil.onclick = this.ceilClickHandler
+
+                iterator++;
+            }
+
+            this.gameField.appendChild(row);
+        }
+    }
+
+    ceilClickHandler = (event) => {
+        if(!this.isDisabled) {
+            const el = event.target;
+            const elementId = el.dataset.elementId;
+            el.classList.add('opened');
+
+            if (!this.firstElement) {
+                this.firstElement = {
+                    el: event.target,
+                    id: elementId
+                };
+            } else if(elementId === this.firstElement.id) {
+                this.firstElement = null;
+            } else {
+                this.isDisabled = true;
+                setTimeout(() => {
+                    this.firstElement.el.classList.remove('opened');
+                    el.classList.remove('opened');
+                    this.firstElement = null;
+                    this.isDisabled = false;
+                }, 500);
+            }
+        }
+    }
+
+    clearField() {
+        this.gameField.innerHTML = '';
     }
 }
+
+const game = new Game({
+    points: 0,
+    fieldWidth: 6,
+    fieldHeight: 5,
+    fieldId: 'game-field',
+    cardsBgs
+});
+
+game.init();
+game.render();
+
