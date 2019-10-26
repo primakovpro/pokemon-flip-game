@@ -28,11 +28,12 @@ class Game {
     init() {
         const usedBgs = [];
         const pokemonsCount = this.settings.fieldHeight * this.settings.fieldWidth;
-    
+        console.info('!----------------------!');
+
         for (let i = 0; i < pokemonsCount; i++) {
             let selectedBg;
 
-            if ((pokemonsCount/2) >= i) {
+            if (pokemonsCount / 2 > i) {
                 const cardNumber = Math.floor(Math.random() * this.settings.cardsBgs.length);
                 selectedBg = this.settings.cardsBgs[cardNumber];
                 usedBgs.push(selectedBg);
@@ -41,8 +42,10 @@ class Game {
             }
 
             this.cards.push(selectedBg);
+            console.info(' -- ', usedBgs.length);
         }
 
+        console.info('!----------------------!');
         this.cards = this.cards.sort(() => Math.random() - 0.5);
     }
 
@@ -109,8 +112,8 @@ class Game {
 
 const game = new Game({
     points: 0,
-    fieldWidth: 6,
-    fieldHeight: 5,
+    fieldWidth: 5,
+    fieldHeight: 6,
     fieldId: 'game-field',
     cardsBgs
 });
