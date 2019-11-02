@@ -18,11 +18,9 @@ class Game {
     constructor(gameProps) {
         this.settings = gameProps;
         this.gameField = document.getElementById(gameProps.fieldId);
-
         this.cards = [];
         this.firstElement = null;
         this.isDisabled = false;
-        this.clearField();
     }
 
     init() {
@@ -100,10 +98,36 @@ class Game {
                 }, 500);
             }
         }
+
+        if (this.checkGamerWin()) {
+            this.renderYouWon()
+        }
+    }
+
+    renderYouWon() {
+        setTimeout(() => {
+            this.gameField.innerHTML = `
+                <div class="menu">
+                    <h1>Вы выиграли !!!!</h1>
+                </div>
+            `;
+        }, 500)
+    }
+
+    checkGamerWin() {
+        const cards = this.gameField.getElementsByClassName('card');
+        const openedCards = this.gameField.getElementsByClassName('opened');
+
+        return cards.length === openedCards.length;
     }
 
     clearField() {
         this.gameField.innerHTML = '';
+    }
+
+    start = () => {
+        this.init();
+        this.render();
     }
 }
 
@@ -115,6 +139,6 @@ const game = new Game({
     cardsBgs
 });
 
-game.init();
-game.render();
+const startButton = document.getElementById('button-start')
+startButton.onclick = game.start;
 
