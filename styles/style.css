@@ -20,6 +20,7 @@ body {
     align-items: center;
     height: 100vw;
     font-family: 'Press Start 2P', cursive;
+    max-height: 100vh;
 }
 
 .card {
